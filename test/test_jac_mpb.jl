@@ -13,7 +13,7 @@ using JuMP, JuMPUtil, Ipopt, MathProgBase
 using SparseArrays, LinearAlgebra
 include("../src/OPF.jl")
 
-const path = "/Users/johannesbrust/Dropbox/ANL/projects/LOAD_DYNAMIC/code/OPF/test/cases"
+const path = "/Users/johannesbrust/Dropbox/ANL/projects/LOAD_DYNAMIC/code/OPF_DEV/test/cases"
 const case = "case9"
 
 opfdata = load_case(case, path, other=false);

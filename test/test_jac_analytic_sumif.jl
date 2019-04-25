@@ -1,11 +1,12 @@
 ################## PCD (Probability Constrained Dispatch) ################
 # Formulation of probability constrained optimal power flow (OPF) problems.
 #
-# test_jac_analytic.jl is an initial script to compute constraint Jacobians using
-# derivatives of the power flow equations.
+# test_jac_analytic_sumif.jl is an initial script to compute constraint Jacobians using
+# derivatives of the power flow equations based on conditions that resemble
+# 'sum if' statements.
 ###########################################################################
-# 11/04/19, J.B.
-# 15/04/19, J.B., Modification to allow for MathProgBase comparison
+# 04/19/19, J.B.
+
 
 using MPCCases
 using JuMP, JuMPUtil, Ipopt, MathProgBase
@@ -13,6 +14,7 @@ using SparseArrays, LinearAlgebra
 
 include("../src/OPF.jl")
 include("jac_analytic.jl")
+include("jac_analytic_sumif.jl")
 
 const path = "/Users/johannesbrust/Dropbox/ANL/projects/LOAD_DYNAMIC/code/OPF_DEV/test/cases"
 const case = "case9"
@@ -82,6 +84,8 @@ jac_mpb           = Array(sjac) # dense Jacobian
 # Analytic Jacobian
 jac_a             = jac_analytic(opfdata,PG,QG,VM,VA,PD,QD);
 
+# Analytic Jacobian (sum-if implementation)
+jac_a_sif         = jac_analytic_sumif(opfdata,PG,QG,VM,VA,PD,QD);
 
 # Column extractions Vm, Va
 
@@ -91,6 +95,8 @@ cols_mpb          = jac_mpb[1:ncons,colscmp];
 cols_a            = jac_a[:,colscmp];
 
 err               = cols_mpb-cols_a;
+
+cols_asif         = jac_a_sif[:,colscmp];
 
 
 # Calling test
